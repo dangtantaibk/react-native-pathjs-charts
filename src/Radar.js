@@ -17,7 +17,7 @@ SPDX-License-Identifier: Apache-2.0
 */
 
 import React, {Component} from 'react'
-import {Text as ReactText}  from 'react-native'
+import {Text as ReactText, View}  from 'react-native'
 import Svg,{ G, Path, Line, Text} from 'react-native-svg'
 import { Options, identity, styleSvg, fontAdapt } from './util'
 const Radar = require('paths-js/radar')
@@ -91,7 +91,7 @@ export default class RadarChart extends Component
 
     const length = chart.rings.length
     const rings = chart.rings.map(function (r, i) {
-      if (i !== length - 1 ){
+      if (i !== length - 1 && i !== length - 2 ){
         return (<Path key={'rings'+i} d={r.path.print()} stroke={colors.stroke} strokeOpacity={colors.strokeOpacity} fill='none' />)
       }
     })
