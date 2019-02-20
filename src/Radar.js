@@ -63,6 +63,7 @@ export default class RadarChart extends Component
     if (this.props.data === undefined) return (<ReactText>{noDataMsg}</ReactText>)
 
     const options = new Options(this.props)
+    const chooseValue = this.props.chooseValue || 0
 
     const x = options.chartWidth / 2
     const y = options.chartHeight / 2
@@ -85,7 +86,7 @@ export default class RadarChart extends Component
     const colorsFill = self.props.options.fill
     const curves = chart.curves.map(function (c, i) {
       const color = colorsFill instanceof Array ? colorsFill[i] : colorsFill;
-      return (<Path key={i} d={c.polygon.path.print()} fill={color} fillOpacity={0.6} />)
+      return (<Path key={i} d={c.polygon.path.print()} fill={color} stroke="#D14242" fillOpacity={0.6} />)
     })
 
     const length = chart.rings.length
@@ -99,13 +100,25 @@ export default class RadarChart extends Component
 
     const labels = chart.rings[length - 1].path.points().map(function (p, i) {
       function onLabelPress() {
-        textStyle.onLabelPress(keys[i], keys_value[`${keys[i]}`]);
+        textStyle.onLabelPress(i);
       }
 
       return (
               <G key={'label' + i}>
                   <Line x1={p[0]} y1={p[1]} x2={center[0]} y2={center[1]} stroke={colors.stroke} strokeOpacity={colors.strokeOpacity}/>
-                  <Text
+                {
+                  (i === chooseValue) ?
+                    <Text
+                      fontFamily={textStyle.fontFamily}
+                      fontSize={textStyle.fontSize}
+                      fontWeight={textStyle.fontWeight}
+                      fontStyle={textStyle.fontStyle}
+                      fill={textStyle.fillChoose}
+                      onPress={onLabelPress}
+                      textAnchor="middle" x={Math.floor(p[0])} y={Math.floor(p[1])}>{keys[i]}
+                    </Text>
+                      :
+                    <Text
                       fontFamily={textStyle.fontFamily}
                       fontSize={textStyle.fontSize}
                       fontWeight={textStyle.fontWeight}
@@ -113,7 +126,8 @@ export default class RadarChart extends Component
                       fill={textStyle.fill}
                       onPress={onLabelPress}
                       textAnchor="middle" x={Math.floor(p[0])} y={Math.floor(p[1])}>{keys[i]}
-                  </Text>
+                    </Text>
+                }
               </G>
             )
     })
@@ -122,10 +136,10 @@ export default class RadarChart extends Component
       <Svg width={options.width} height={options.height}>
           <G x={options.margin.left} y={options.margin.top}>
               {labels}
-              <G x={options.margin.left * -1} y={options.margin.top * -1}>
+              {/*<G x={options.margin.left * -1} y={options.margin.top * -1}>*/}
                   {rings}
                   {curves}
-              </G>
+              {/*</G>*/}
           </G>
       </Svg>
     );
