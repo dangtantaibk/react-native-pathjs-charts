@@ -98,6 +98,14 @@ export default class RadarChart extends Component
 
     const textStyle = fontAdapt(options.label)
 
+    const line = chart.rings[length - 3].path.points().map(function (p, i) {
+      return (
+        <G key={'label' + i}>
+          <Line x1={p[0]} y1={p[1]} x2={center[0]} y2={center[1]} stroke={colors.stroke} strokeOpacity={colors.strokeOpacity}/>
+        </G>
+      )
+    })
+
     const labels = chart.rings[length - 1].path.points().map(function (p, i) {
       function onLabelPress() {
         textStyle.onLabelPress(i);
@@ -105,7 +113,7 @@ export default class RadarChart extends Component
 
       return (
               <G key={'label' + i}>
-                  <Line x1={p[0]} y1={p[1]} x2={center[0]} y2={center[1]} stroke={colors.stroke} strokeOpacity={colors.strokeOpacity}/>
+                  {/*<Line x1={p[0]} y1={p[1]} x2={center[0]} y2={center[1]} stroke={colors.stroke} strokeOpacity={colors.strokeOpacity}/>*/}
                 {
                   (i === chooseValue) ?
                     <Text
@@ -135,6 +143,7 @@ export default class RadarChart extends Component
     return (
       <Svg width={options.width} height={options.height}>
           <G x={options.margin.left} y={options.margin.top}>
+            {line}
               {labels}
               {/*<G x={options.margin.left * -1} y={options.margin.top * -1}>*/}
                   {rings}
